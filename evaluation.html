@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluasi Perilaku dan Sikap - Tes Evaluasi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .evaluation-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            padding: 25px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            position: relative;
+        }
+        .back-btn {
+            position: absolute;
+            left: 0;
+            top: 0;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .back-btn:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+        }
+        .user-info {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: rgba(74, 111, 220, 0.1);
+            border-radius: 30px;
+            display: inline-block;
+        }
+        .user-name {
+            color: #4a6fdc;
+            font-weight: 600;
+        }
+        .table-responsive {
+            margin-bottom: 30px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .table th {
+            background-color: #4a6fdc;
+            color: white;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .table td {
+            vertical-align: middle;
+        }
+        .statement-cell {
+            width: 60%;
+        }
+        .options-cell {
+            width: 30%;
+        }
+        .points-cell, .score-cell {
+            width: 5%;
+            text-align: center;
+        }
+        .option-btn {
+            margin: 2px;
+            min-width: 70px;
+        }
+        .btn-benar {
+            background-color: #28a745;
+            color: white;
+        }
+        .btn-setuju {
+            background-color: #17a2b8;
+            color: white;
+        }
+        .btn-salah {
+            background-color: #dc3545;
+            color: white;
+        }
+        .btn-neutral {
+            background-color: #6c757d;
+            color: white;
+        }
+        .total-score {
+            text-align: right;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+        }
+        .reset-btn {
+            margin-top: 20px;
+        }
+        .progress-container {
+            margin-bottom: 20px;
+        }
+        .progress {
+            height: 10px;
+            border-radius: 5px;
+        }
+        .result-modal .modal-body {
+            text-align: center;
+            padding: 30px;
+        }
+        .result-score {
+            font-size: 4rem;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .result-excellent {
+            color: #28a745;
+        }
+        .result-good {
+            color: #17a2b8;
+        }
+        .result-average {
+            color: #ffc107;
+        }
+        .result-poor {
+            color: #dc3545;
+        }
+        .result-message {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        .category-section {
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+        .category-title {
+            background-color: #4a6fdc;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .scroll-top-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #4a6fdc;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        .scroll-top-btn:hover {
+            background-color: #3a5cc9;
+            transform: translateY(-5px);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Loading Screen */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(74, 111, 220, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .loading-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="evaluation-container">
+        <div class="header">
+            <button class="back-btn" onclick="goBack()">
+                <i class="fas fa-arrow-left me-1"></i>Kembali
+            </button>
+            <h1>Evaluasi Perilaku dan Sikap</h1>
+            <div class="user-info">
+                <i class="fas fa-user me-2"></i><span class="user-name">Iqbal Yafi Affan</span>
+            </div>
+            <p>Pilih jawaban yang sesuai untuk setiap pernyataan</p>
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress">
+                <div class="progress-bar bg-info" role="progressbar" id="progressBar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            <div class="text-center mt-2">
+                <small>Progress: <span id="progressText">0/100</span></small>
+            </div>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="statement-cell">Pernyataan</th>
+                        <th class="options-cell">Pilihan Jawaban</th>
+                        <th class="points-cell">Poin</th>
+                        <th class="score-cell">Score</th>
+                    </tr>
+                </thead>
+                <tbody id="evaluationTable">
+                    <!-- Data akan diisi oleh JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="total-score">
+            Total Score: <span id="totalScore">0</span>
+        </div>
+        
+        <div class="text-center">
+            <button class="btn btn-warning reset-btn" onclick="resetEvaluation()">
+                <i class="fas fa-redo me-2"></i>Reset Evaluasi
+            </button>
+            <button class="btn btn-success ms-2" onclick="showResult()">
+                <i class="fas fa-chart-bar me-2"></i>Lihat Hasil
+            </button>
+        </div>
+    </div>
+
+    <!-- Tombol Scroll ke Atas -->
+    <button class="scroll-top-btn" id="scrollTopBtn" onclick="scrollToTop()">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Modal Hasil Evaluasi -->
+    <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content result-modal">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="resultModalLabel">Hasil Evaluasi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="user-info mb-3">
+                        <i class="fas fa-user me-2"></i><span class="user-name">Iqbal Yafi Affan</span>
+                    </div>
+                    <div class="result-score" id="resultScore">0</div>
+                    <div class="result-message" id="resultMessage">Pesan hasil</div>
+                    <div id="resultDescription"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-primary" onclick="resetEvaluation(); $('#resultModal').modal('hide');">Ulangi Evaluasi</button>
+                    <button type="button" class="btn btn-info" onclick="goToHome(); $('#resultModal').modal('hide');">
+                        <i class="fas fa-home me-1"></i>Kembali ke Beranda
+                    </button>
+                    <button type="button" class="btn btn-success" onclick="goToThanks(); $('#resultModal').modal('hide');">
+                        <i class="fas fa-check me-1"></i>Selesai
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Data evaluasi dengan 100 pertanyaan
+        const evaluationData = [
+            // Kategori: Disiplin Waktu
+            {
+                statement: "Saya selalu datang tepat waktu ke tempat kerja",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Disiplin Waktu"
+            },
+            {
+                statement: "Saya selalu memenuhi deadline pekerjaan",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Disiplin Waktu"
+            },
+            {
+                statement: "Saya mengatur jadwal harian dengan baik",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Disiplin Waktu"
+            },
+            {
+                statement: "Saya tidak sering terlambat dalam rapat",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Disiplin Waktu"
+            },
+            {
+                statement: "Saya mampu menyelesaikan tugas tepat waktu",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Disiplin Waktu"
+            },
+            
+            // Kategori: Kesehatan Fisik
+            {
+                statement: "Saya secara teratur berolahraga minimal 3 kali seminggu",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kesehatan Fisik"
+            },
+            {
+                statement: "Saya mengonsumsi makanan seimbang setiap hari",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kesehatan Fisik"
+            },
+            {
+                statement: "Saya memiliki waktu istirahat yang cukup setiap hari",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kesehatan Fisik"
+            },
+            {
+                statement: "Saya tidak merokok",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kesehatan Fisik"
+            },
+            {
+                statement: "Saya minum air putih minimal 8 gelas sehari",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kesehatan Fisik"
+            },
+            {
+                statement: "Saya menghindari makanan junk food",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kesehatan Fisik"
+            },
+            {
+                statement: "Saya melakukan pemeriksaan kesehatan secara berkala",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kesehatan Fisik"
+            },
+            {
+                statement: "Saya tidak mengonsumsi minuman beralkohol",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kesehatan Fisik"
+            },
+            {
+                statement: "Saya menjaga berat badan ideal",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kesehatan Fisik"
+            },
+            {
+                statement: "Saya tidak sering begadang",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kesehatan Fisik"
+            },
+            
+            // Kategori: Kerja Sama Tim
+            {
+                statement: "Saya mampu bekerja dalam tim dengan baik",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kerja Sama Tim"
+            },
+            {
+                statement: "Saya aktif dalam rapat dan memberikan kontribusi",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kerja Sama Tim"
+            },
+            {
+                statement: "Saya menghargai pendapat orang lain",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kerja Sama Tim"
+            },
+            {
+                statement: "Saya mudah beradaptasi dengan anggota tim baru",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kerja Sama Tim"
+            },
+            {
+                statement: "Saya tidak segan membantu rekan kerja yang kesulitan",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kerja Sama Tim"
+            },
+            {
+                statement: "Saya menerima kritik dengan baik",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kerja Sama Tim"
+            },
+            {
+                statement: "Saya menghindari konflik dengan rekan kerja",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kerja Sama Tim"
+            },
+            {
+                statement: "Saya berkomunikasi secara efektif dalam tim",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kerja Sama Tim"
+            },
+            {
+                statement: "Saya bertanggung jawab atas tugas tim",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kerja Sama Tim"
+            },
+            {
+                statement: "Saya tidak suka mengambil keputusan sendiri tanpa berkonsultasi",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kerja Sama Tim"
+            },
+            
+            // Kategori: Pengembangan Diri
+            {
+                statement: "Saya selalu berusaha untuk mengembangkan kemampuan diri",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Pengembangan Diri"
+            },
+            {
+                statement: "Saya membaca buku untuk menambah pengetahuan",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Pengembangan Diri"
+            },
+            {
+                statement: "Saya mengikuti pelatihan atau kursus untuk meningkatkan skill",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Pengembangan Diri"
+            },
+            {
+                statement: "Saya belajar dari kesalahan yang pernah dibuat",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Pengembangan Diri"
+            },
+            {
+                statement: "Saya memiliki target pengembangan diri yang jelas",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Pengembangan Diri"
+            },
+            {
+                statement: "Saya mencari feedback untuk perbaikan diri",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Pengembangan Diri"
+            },
+            {
+                statement: "Saya mengikuti perkembangan teknologi terkini",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Pengembangan Diri"
+            },
+            {
+                statement: "Saya memiliki mentor atau panutan",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Pengembangan Diri"
+            },
+            {
+                statement: "Saya tidak takut mencoba hal baru",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Pengembangan Diri"
+            },
+            {
+                statement: "Saya menginvestasikan waktu untuk belajar hal baru",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Pengembangan Diri"
+            },
+            
+            // Kategori: Manajemen Stres
+            {
+                statement: "Saya mampu mengelola stres dengan baik",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Manajemen Stres"
+            },
+            {
+                statement: "Saya tidak mudah panik dalam situasi sulit",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Manajemen Stres"
+            },
+            {
+                statement: "Saya memiliki cara untuk melepaskan stres",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Manajemen Stres"
+            },
+            {
+                statement: "Saya mampu tetap tenang di bawah tekanan",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Manajemen Stres"
+            },
+            {
+                statement: "Saya tidak membawa masalah kerja ke rumah",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Manajemen Stres"
+            },
+            {
+                statement: "Saya melakukan meditasi atau relaksasi",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Manajemen Stres"
+            },
+            {
+                statement: "Saya menghindari prokrastinasi",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Manajemen Stres"
+            },
+            {
+                statement: "Saya mampu memprioritaskan tugas dengan baik",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Manajemen Stres"
+            },
+            {
+                statement: "Saya tidak mudah marah",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Manajemen Stres"
+            },
+            {
+                statement: "Saya memiliki work-life balance yang baik",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Manajemen Stres"
+            },
+            
+            // Kategori: Etika Kerja
+            {
+                statement: "Saya selalu jujur dalam pekerjaan",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Etika Kerja"
+            },
+            {
+                statement: "Saya menjaga rahasia perusahaan",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Etika Kerja"
+            },
+            {
+                statement: "Saya tidak menggunakan fasilitas kantor untuk keperluan pribadi",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Etika Kerja"
+            },
+            {
+                statement: "Saya menghormati atasan dan rekan kerja",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Etika Kerja"
+            },
+            {
+                statement: "Saya tidak melakukan gossip di tempat kerja",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Etika Kerja"
+            },
+            {
+                statement: "Saya bertanggung jawab atas pekerjaan saya",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Etika Kerja"
+            },
+            {
+                statement: "Saya tidak menyalahkan orang lain atas kesalahan saya",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Etika Kerja"
+            },
+            {
+                statement: "Saya menjaga profesionalisme di tempat kerja",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Etika Kerja"
+            },
+            {
+                statement: "Saya mengikuti aturan dan kebijakan perusahaan",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Etika Kerja"
+            },
+            {
+                statement: "Saya tidak menerima suap atau bentuk gratifikasi lainnya",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Etika Kerja"
+            },
+            
+            // Kategori: Kreativitas dan Inovasi
+            {
+                statement: "Saya sering memberikan ide baru dalam tim",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kreativitas dan Inovasi"
+            },
+            {
+                statement: "Saya mencari cara yang lebih efisien untuk menyelesaikan pekerjaan",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kreativitas dan Inovasi"
+            },
+            {
+                statement: "Saya tidak takut mencoba pendekatan baru",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kreativitas dan Inovasi"
+            },
+            {
+                statement: "Saya terbuka terhadap perubahan",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kreativitas dan Inovasi"
+            },
+            {
+                statement: "Saya mampu memecahkan masalah dengan solusi kreatif",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kreativitas dan Inovasi"
+            },
+            {
+                statement: "Saya tidak terpaku pada cara kerja yang lama",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kreativitas dan Inovasi"
+            },
+            {
+                statement: "Saya menginspirasi orang lain untuk berpikir kreatif",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kreativitas dan Inovasi"
+            },
+            {
+                statement: "Saya melihat tantangan sebagai peluang",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kreativitas dan Inovasi"
+            },
+            {
+                statement: "Saya tidak takut gagal",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kreativitas dan Inovasi"
+            },
+            {
+                statement: "Saya selalu mencari cara untuk meningkatkan kualitas kerja",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kreativitas dan Inovasi"
+            },
+            
+            // Kategori: Komunikasi
+            {
+                statement: "Saya berkomunikasi dengan jelas dan efektif",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Komunikasi"
+            },
+            {
+                statement: "Saya mendengarkan dengan baik saat orang lain berbicara",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Komunikasi"
+            },
+            {
+                statement: "Saya mampu menyampaikan ide dengan baik",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Komunikasi"
+            },
+            {
+                statement: "Saya tidak menyela pembicaraan orang lain",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Komunikasi"
+            },
+            {
+                statement: "Saya menggunakan bahasa tubuh yang positif",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Komunikasi"
+            },
+            {
+                statement: "Saya mampu beradaptasi dengan gaya komunikasi orang lain",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Komunikasi"
+            },
+            {
+                statement: "Saya tidak mudah tersinggung dengan komentar orang lain",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Komunikasi"
+            },
+            {
+                statement: "Saya memberikan feedback yang konstruktif",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Komunikasi"
+            },
+            {
+                statement: "Saya mampu berkomunikasi dengan orang dari latar belakang berbeda",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Komunikasi"
+            },
+            {
+                statement: "Saya tidak menghindari percakapan yang sulit",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Komunikasi"
+            },
+            
+            // Kategori: Kepemimpinan
+            {
+                statement: "Saya mampu memimpin tim dengan baik",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kepemimpinan"
+            },
+            {
+                statement: "Saya mengambil keputusan dengan bijaksana",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kepemimpinan"
+            },
+            {
+                statement: "Saya menginspirasi orang lain",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kepemimpinan"
+            },
+            {
+                statement: "Saya mendelegasikan tugas dengan tepat",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kepemimpinan"
+            },
+            {
+                statement: "Saya mengakui kesalahan dan bertanggung jawab",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kepemimpinan"
+            },
+            {
+                statement: "Saya memberikan penghargaan atas prestasi tim",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kepemimpinan"
+            },
+            {
+                statement: "Saya tidak memihak dalam tim",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kepemimpinan"
+            },
+            {
+                statement: "Saya mampu menyelesaikan konflik dalam tim",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kepemimpinan"
+            },
+            {
+                statement: "Saya memberikan arahan yang jelas",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kepemimpinan"
+            },
+            {
+                statement: "Saya tidak menggunakan kekuasaan untuk keuntungan pribadi",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kepemimpinan"
+            },
+            
+            // Kategori: Kualitas Kerja
+            {
+                statement: "Saya selalu memberikan hasil kerja terbaik",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kualitas Kerja"
+            },
+            {
+                statement: "Saya teliti dalam mengerjakan tugas",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kualitas Kerja"
+            },
+            {
+                statement: "Saya memeriksa kembali pekerjaan sebelum menyerahkan",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kualitas Kerja"
+            },
+            {
+                statement: "Saya tidak mudah puas dengan hasil kerja",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kualitas Kerja"
+            },
+            {
+                statement: "Saya selalu berusaha untuk melebihi ekspektasi",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kualitas Kerja"
+            },
+            {
+                statement: "Saya menerima tanggung jawab atas kualitas kerja saya",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kualitas Kerja"
+            },
+            {
+                statement: "Saya tidak melakukan kesalahan yang sama berulang kali",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kualitas Kerja"
+            },
+            {
+                statement: "Saya memperhatikan detail dalam pekerjaan",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kualitas Kerja"
+            },
+            {
+                statement: "Saya tidak menyelesaikan pekerjaan secara terburu-buru",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kualitas Kerja"
+            },
+            {
+                statement: "Saya bangga dengan hasil kerja saya",
+                options: ["Benar", "Setuju", "Salah"],
+                points: [2, 1, 0],
+                selected: null,
+                category: "Kualitas Kerja"
+            }
+        ];
+
+        // Fungsi untuk membuat tabel evaluasi
+        function createEvaluationTable() {
+            const tableBody = document.getElementById('evaluationTable');
+            tableBody.innerHTML = '';
+            
+            let currentCategory = '';
+            
+            evaluationData.forEach((item, index) => {
+                // Jika kategori berubah, tambahkan baris kategori
+                if (item.category !== currentCategory) {
+                    currentCategory = item.category;
+                    
+                    const categoryRow = document.createElement('tr');
+                    categoryRow.className = 'category-row';
+                    
+                    const categoryCell = document.createElement('td');
+                    categoryCell.colSpan = 4;
+                    categoryCell.className = 'category-title';
+                    categoryCell.textContent = currentCategory;
+                    
+                    categoryRow.appendChild(categoryCell);
+                    tableBody.appendChild(categoryRow);
+                }
+                
+                const row = document.createElement('tr');
+                
+                // Kolom pernyataan
+                const statementCell = document.createElement('td');
+                statementCell.textContent = item.statement;
+                row.appendChild(statementCell);
+                
+                // Kolom pilihan jawaban
+                const optionsCell = document.createElement('td');
+                const optionsContainer = document.createElement('div');
+                optionsContainer.className = 'd-flex flex-wrap';
+                
+                item.options.forEach((option, optIndex) => {
+                    const button = document.createElement('button');
+                    button.textContent = option;
+                    button.className = `btn btn-sm option-btn btn-neutral`;
+                    button.onclick = () => selectOption(index, optIndex, button);
+                    optionsContainer.appendChild(button);
+                });
+                
+                optionsCell.appendChild(optionsContainer);
+                row.appendChild(optionsCell);
+                
+                // Kolom poin
+                const pointsCell = document.createElement('td');
+                pointsCell.className = 'text-center';
+                pointsCell.textContent = '-';
+                pointsCell.id = `points-${index}`;
+                row.appendChild(pointsCell);
+                
+                // Kolom score
+                const scoreCell = document.createElement('td');
+                scoreCell.className = 'text-center score-cell';
+                scoreCell.textContent = '0';
+                scoreCell.id = `score-${index}`;
+                row.appendChild(scoreCell);
+                
+                tableBody.appendChild(row);
+            });
+            
+            updateProgress();
+        }
+
+        // Fungsi untuk memilih opsi
+        function selectOption(itemIndex, optionIndex, buttonElement) {
+            const item = evaluationData[itemIndex];
+            const row = buttonElement.closest('tr');
+            const buttons = row.querySelectorAll('.option-btn');
+            
+            // Reset semua button di baris ini
+            buttons.forEach(btn => {
+                btn.className = `btn btn-sm option-btn btn-neutral`;
+            });
+            
+            // Set button yang dipilih
+            if (item.options[optionIndex] === 'Benar') {
+                buttonElement.className = `btn btn-sm option-btn btn-benar`;
+            } else if (item.options[optionIndex] === 'Setuju') {
+                buttonElement.className = `btn btn-sm option-btn btn-setuju`;
+            } else if (item.options[optionIndex] === 'Salah') {
+                buttonElement.className = `btn btn-sm option-btn btn-salah`;
+            }
+            
+            // Update data
+            item.selected = optionIndex;
+            
+            // Update tampilan poin dan score
+            document.getElementById(`points-${itemIndex}`).textContent = item.points[optionIndex];
+            document.getElementById(`score-${itemIndex}`).textContent = item.points[optionIndex];
+            
+            // Update total score
+            updateTotalScore();
+            
+            // Update progress
+            updateProgress();
+        }
+
+        // Fungsi untuk mengupdate total score
+        function updateTotalScore() {
+            let total = 0;
+            evaluationData.forEach(item => {
+                if (item.selected !== null) {
+                    total += item.points[item.selected];
+                }
+            });
+            document.getElementById('totalScore').textContent = total;
+        }
+
+        // Fungsi untuk mengupdate progress
+        function updateProgress() {
+            let answered = 0;
+            evaluationData.forEach(item => {
+                if (item.selected !== null) {
+                    answered++;
+                }
+            });
+            
+            const total = evaluationData.length;
+            const percentage = (answered / total) * 100;
+            
+            document.getElementById('progressBar').style.width = `${percentage}%`;
+            document.getElementById('progressBar').setAttribute('aria-valuenow', percentage);
+            document.getElementById('progressText').textContent = `${answered}/${total}`;
+        }
+
+        // Fungsi untuk reset evaluasi
+        function resetEvaluation() {
+            evaluationData.forEach(item => {
+                item.selected = null;
+            });
+            
+            // Reset tampilan tabel
+            const rows = document.querySelectorAll('#evaluationTable tr');
+            rows.forEach((row, index) => {
+                // Lewati baris kategori
+                if (row.classList.contains('category-row')) return;
+                
+                const buttons = row.querySelectorAll('.option-btn');
+                buttons.forEach(btn => {
+                    btn.className = `btn btn-sm option-btn btn-neutral`;
+                });
+                
+                document.getElementById(`points-${index}`).textContent = '-';
+                document.getElementById(`score-${index}`).textContent = '0';
+            });
+            
+            // Reset total score
+            document.getElementById('totalScore').textContent = '0';
+            
+            // Reset progress
+            updateProgress();
+        }
+
+        // Fungsi untuk kembali ke halaman utama dengan loading screen
+        function goBack() {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.classList.add('active');
+            
+            // Simulasi loading selama 1.5 detik
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
+        }
+
+        // Fungsi untuk kembali ke halaman utama dari modal hasil
+        function goToHome() {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.classList.add('active');
+            
+            // Simulasi loading selama 1.5 detik
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
+        }
+
+        // Fungsi untuk menuju halaman terima kasih
+        function goToThanks() {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.classList.add('active');
+            
+            // Simulasi loading selama 1.5 detik
+            setTimeout(() => {
+                window.location.href = 'thanks.html';
+            }, 1500);
+        }
+
+        // Fungsi untuk menampilkan hasil evaluasi
+        function showResult() {
+            let total = 0;
+            let answered = 0;
+            
+            evaluationData.forEach(item => {
+                if (item.selected !== null) {
+                    total += item.points[item.selected];
+                    answered++;
+                }
+            });
+            
+            if (answered < evaluationData.length) {
+                alert('Silakan jawab semua pertanyaan terlebih dahulu!');
+                return;
+            }
+            
+            const maxScore = evaluationData.length * 2;
+            const percentage = (total / maxScore) * 100;
+            
+            let resultClass, resultMessage, resultDescription;
+            
+            if (percentage >= 80) {
+                resultClass = 'result-excellent';
+                resultMessage = 'SANGAT BAIK!';
+                resultDescription = 'Anda memiliki perilaku dan sikap yang sangat baik. Pertahankan dan terus tingkatkan!';
+            } else if (percentage >= 60) {
+                resultClass = 'result-good';
+                resultMessage = 'BAIK!';
+                resultDescription = 'Anda memiliki perilaku dan sikap yang baik. Ada beberapa area yang bisa ditingkatkan.';
+            } else if (percentage >= 40) {
+                resultClass = 'result-average';
+                resultMessage = 'CUKUP';
+                resultDescription = 'Perilaku dan sikap Anda cukup baik, namun perlu banyak perbaikan.';
+            } else {
+                resultClass = 'result-poor';
+                resultMessage = 'KURANG';
+                resultDescription = 'Perilaku dan sikap Anda perlu diperbaiki secara signifikan.';
+            }
+            
+            document.getElementById('resultScore').textContent = `${total}/${maxScore}`;
+            document.getElementById('resultScore').className = `result-score ${resultClass}`;
+            document.getElementById('resultMessage').textContent = resultMessage;
+            document.getElementById('resultDescription').innerHTML = `
+                <p>${resultDescription}</p>
+                <div class="progress mt-3">
+                    <div class="progress-bar ${resultClass.replace('result-', 'bg-')}" role="progressbar" 
+                         style="width: ${percentage}%" aria-valuenow="${percentage}" 
+                         aria-valuemin="0" aria-valuemax="100">${percentage.toFixed(0)}%</div>
+                </div>
+            `;
+            
+            // Tampilkan modal hasil
+            const resultModal = new bootstrap.Modal(document.getElementById('resultModal'));
+            resultModal.show();
+        }
+
+        // Fungsi untuk scroll ke atas
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Tampilkan tombol scroll ke atas saat scroll ke bawah
+        window.addEventListener('scroll', function() {
+            const scrollTopBtn = document.getElementById('scrollTopBtn');
+            if (window.pageYOffset > 300) {
+                scrollTopBtn.style.display = 'flex';
+            } else {
+                scrollTopBtn.style.display = 'none';
+            }
+        });
+
+        // Inisialisasi tabel saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', createEvaluationTable);
+    </script>
+</body>
+</html>
